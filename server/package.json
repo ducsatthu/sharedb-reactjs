@@ -1,0 +1,26 @@
+{
+  "name": "SocketServer",
+  "version": "1.0.0",
+  "description": "Socker server sample",
+  "main": "index.js",
+  "author": "ductx",
+  "license": "MIT",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "connect": "^3.6.6",
+    "express": "^4.16.4",
+    "http": "^0.0.0",
+    "sharedb": "^1.0.0-beta.22",
+    "sharedb-mongo": "^1.0.0-beta.8",
+    "sharedb-redis-pubsub": "^1.0.0-beta.1",
+    "websocket-json-stream": "^0.0.3",
+    "ws": "^7.0.0"
+  },
+  "devDependencies": {
+    "babel-preset-react": "^6.5.0",
+    "babelify": "^7.3.0",
+    "browserify": "^13.0.1"
+  }
+}
