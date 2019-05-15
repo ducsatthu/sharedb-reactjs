@@ -1,15 +1,19 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
+import _ from 'lodash';
 
 import './App.css';
 
 import connection from './sharedb/connection'
 import Sheet from "./components/Sheet";
 
+import {socketAction} from './actions/socketAction'
 /* 
  * mapDispatchToProps
 */
-const mapDispatchToProps = dispatch => ({})
+const mapDispatchToProps = dispatch => ({
+    socketAction: () => dispatch(socketAction())
+})
 
 /* 
  * mapStateToProps
@@ -29,14 +33,24 @@ class App extends Component {
         query: {}
     }
 
+    constructor(props) {
+        super(props);
+
+        this.addNewTest = this.addNewTest.bind(this);
+    }
+
+
     componentDidMount() {
         var comp = this;
-        var query = connection.createSubscribeQuery('sheets', {$sort: {_id: -1}});
+        var query = connection.createSubscribeQuery('sheets', {$sort: {order: -1}});
         query.on('ready', update);
         query.on('changed', update);
+        query.on('insert', update);
+        query.on('remove', update);
 
         function update() {
             comp.setState({sheets: query.results, query: query});
+            comp.props.socketAction()
         }
     }
 
@@ -59,13 +73,35 @@ class App extends Component {
         });
     }
 
+    addNewTest = () => {
+        let maxDocs = _.maxBy(this.state.sheets, 'data.order') || 0;
+
+        let newId = "1";
+        let newOrder = 1;
+        if (maxDocs) {
+            newId = "" + (parseInt(maxDocs.data.order) + 1);
+            newOrder = (parseInt(maxDocs.data.order) + 1);
+        }
+        connection.get('sheets', newId).create({
+            title: 'Test' + newId,
+            order: newOrder,
+            bienmoi: 'gia tri mac dinh'
+        });
+    }
+
+    onRemove = (sheet) => {
+        connection.get('sheets', sheet.id).del()
+    }
+
     render() {
         return (
             <div>
                 <h1>Input sheet</h1>
 
                 <div className="sheetInput">
-                    <Sheet {...this.state} onPlayerSelected={this.handlePlayerSelected} onChange={this.handleChange}/>
+                    <Sheet {...this.state} onRemove={this.onRemove} onPlayerSelected={this.handlePlayerSelected}
+                           onChange={this.handleChange}/>
+                    <button onClick={this.addNewTest}>Test</button>
                 </div>
             </div>
         );

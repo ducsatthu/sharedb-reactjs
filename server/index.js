@@ -37,16 +37,4 @@ connection.createFetchQuery('sheets', {}, {}, function (err, results) {
     if (err) {
         throw err;
     }
-
-    if (results.length === 0) {
-        //Create 5 input sheet
-        let sheet = Array.from(new Array(10),(val,index)=> {
-            return index;
-        });
-        sheet.forEach(function (value, index) {
-            var doc = connection.get('sheets', ""+ index);
-            var data = {title: "content demo + " + value};
-            doc.create(data);
-        });
-    }
 });

@@ -19,15 +19,18 @@ class Sheet extends Component {
     handleChange = (text, sheet) => {
         this.props.onChange(text, sheet)
     }
+    handleRemove = (sheet) => {
+        this.props.onRemove(sheet)
+    }
 
     render() {
         var { sheets } = this.props;
 
-        var other = _.omit(this.props, 'sheets'); //Remove sheets on props
+        var other = _.omit(this.props, 'sheets', 'query'); //Remove sheets on props
 
         var InputSheet = sheets.map((value) => {
             return (
-                <InputForm {...other} doc={value} key={value.id} onChange={this.handleChange}/>
+                <InputForm {...other} doc={value} key={value.id} onChange={this.handleChange} onRemove={this.handleRemove}/>
             )
         });
         return (

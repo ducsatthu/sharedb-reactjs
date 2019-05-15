@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-
+import _ from 'lodash';
 /*
  * mapDispatchToProps
 */
@@ -19,11 +19,16 @@ class InputForm extends Component {
         super(props);
         this.state = {value: ''};
         this.handleChange = this.handleChange.bind(this);
+        this.handleRemove = this.handleRemove.bind(this);
     }
 
     handleChange(event) {
         this.setState({value: event.target.value});
         this.props.onChange(event.target.value, this.props.doc)
+    }
+
+    handleRemove() {
+        this.props.onRemove(this.props.doc)
     }
 
     componentDidMount() {
@@ -36,12 +41,11 @@ class InputForm extends Component {
             }
             doc.on('load', update);
             doc.on('op', update);
+            doc.on('create', update);
+            doc.on('del', update);
 
             function update() {
                 // `comp.props.sheet.data` is now updated. re-render component.
-                comp.setState({
-                    value: doc.data.title
-                })
                 comp.forceUpdate();
             }
         });
@@ -53,9 +57,18 @@ class InputForm extends Component {
 
 
     render() {
+
+        let {doc} = this.props;
+
+        let content = ''
+        if(!_.isUndefined(doc) && !_.isUndefined(doc.data) && !_.isUndefined(doc.data.title)){
+            content = doc.data.title
+        }
+
         return (
             <div>
-                <input type='text' onChange={this.handleChange} value={this.props.doc.data.title}/>
+                <input type='text' onChange={this.handleChange} value={content}/>
+                <button onClick={this.handleRemove}>Remove</button>
             </div>
         );
     }

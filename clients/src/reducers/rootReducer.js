@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
-import simpleReducer from './simpleReducer';
+import socketReducer from './socketReducer';
 
 export default combineReducers({
-  simpleReducer
+  socketReducer
 });

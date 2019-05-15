@@ -1,9 +1,9 @@
 /* 
-  src/reducers/simpleReducer.js
+  src/reducers/socketReducer.js
 */
 export default (state = {}, action) => {
   switch (action.type) {
-    case 'SIMPLE_ACTION':
+    case 'SOCKET_ACTION':
       return {
         result: action.payload
       }
